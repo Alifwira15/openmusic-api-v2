@@ -18,8 +18,8 @@ class SongsService {
     }
 
     const query = {
-      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
-      values: [id, title, year, performer, genre, duration, albumId],
+      text: 'INSERT INTO songs(id, title, year, performer, genre, duration, album_id) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
+      values: [id, title, year, performer, genre, duration, albumId ?? null],
     };
 
     const result = await this._pool.query(query);
@@ -52,7 +52,7 @@ class SongsService {
 
   async getSongById(id) {
     const query = {
-      text: 'SELECT * FROM songs WHERE id = $1',
+      text: 'SELECT id, title, year, performer, genre, duration, album_id AS "albumId" FROM songs WHERE id = $1',
       values: [id],
     };
     const result = await this._pool.query(query);

@@ -1,11 +1,12 @@
-const { nanoid } = require('nanoid');
+const { nanoid } = require( 'nanoid');
 const bcrypt = require('bcrypt');
+const { Pool } = require('pg');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class UsersService {
-  constructor(pool) {
-    this._pool = pool;
+  constructor() {
+    this._pool = new Pool();
   }
 
   async addUser({ username, password, fullname }) {
@@ -15,7 +16,7 @@ class UsersService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const query = {
-      text: 'INSERT INTO users VALUES($1, $2, $3, $4) RETURNING id',
+      text: 'INSERT INTO users(id, username, password, fullname) VALUES($1, $2, $3, $4) RETURNING id',
       values: [id, username, hashedPassword, fullname],
     };
 

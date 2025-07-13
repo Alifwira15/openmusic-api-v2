@@ -71,7 +71,6 @@ const init = async () => {
     }),
   });
 
-  // Register semua plugin
   await server.register([
     {
       plugin: albums,
@@ -132,24 +131,25 @@ const init = async () => {
   server.ext('onPreResponse', (request, h) => {
     const { response } = request;
 
-    if (response instanceof Error) {
-      if (response instanceof ClientError) {
-        return h.response({
-          status: 'fail',
-          message: response.message,
-        }).code(response.statusCode);
-      }
+    if (response instanceof ClientError) {
+    return h.response({
+      status: 'fail',
+      message: response.message,
+    }).code(response.statusCode);
+  }
 
-      if (!response.isServer) {
-        return h.continue;
-      }
+  if (response instanceof Error) {
+    console.error('🔥 SERVER ERROR CAUGHT:', response);
 
-      console.error(response);
-      return h.response({
-        status: 'error',
-        message: 'Terjadi kegagalan pada server kami',
-      }).code(500);
+    if (!response.isServer) {
+      return h.continue;
     }
+
+    return h.response({
+      status: 'error',
+      message: 'Terjadi kegagalan pada server kami',
+    }).code(500);
+  }
 
     return h.continue;
   });

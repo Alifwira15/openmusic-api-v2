@@ -4,13 +4,13 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 
 class AlbumsService {
   constructor() {
-    this._pool = require('../../db/connection'); // Sesuaikan ke modul koneksi PG-mu
+    this._pool = require('../../db/connection');
   }
 
   async addAlbum({ name, year }) {
     const id = `album-${nanoid(16)}`;
     const query = {
-      text: 'INSERT INTO albums VALUES($1, $2, $3) RETURNING id',
+      text: 'INSERT INTO albums(id, name, year) VALUES($1, $2, $3) RETURNING id',
       values: [id, name, year],
     };
     const result = await this._pool.query(query);

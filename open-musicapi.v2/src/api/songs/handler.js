@@ -14,13 +14,10 @@ class SongsHandler {
 
     const songId = await this._service.addSong({ title, year, performer, genre, duration, albumId });
 
-    const response = h.response({
+    return h.response({
       status: 'success',
-      message: 'Lagu berhasil ditambahkan',
       data: { songId },
-    });
-    response.code(201);
-    return response;
+    }).code(201);
   }
 
   async getSongsHandler(request, h) {
@@ -48,10 +45,9 @@ class SongsHandler {
 
     await this._service.editSongById(id, request.payload);
 
-    return {
+    return h.response({
       status: 'success',
-      message: 'Lagu berhasil diperbarui',
-    };
+    }).code(200);
   }
 
   async deleteSongByIdHandler(request, h) {
@@ -59,10 +55,10 @@ class SongsHandler {
 
     await this._service.deleteSongById(id);
 
-    return {
+    return h.response({
       status: 'success',
       message: 'Lagu berhasil dihapus',
-    };
+    }).code(200);
   }
 }
 
