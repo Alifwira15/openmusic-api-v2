@@ -2,7 +2,7 @@ const { nanoid } = require( 'nanoid');
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 const InvariantError = require('../../exceptions/InvariantError');
-const NotFoundError = require('../../exceptions/NotFoundError');
+const AuthenticationError = require('../../exceptions/AuthenticationError');
 
 class UsersService {
   constructor() {
@@ -48,7 +48,7 @@ class UsersService {
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new NotFoundError('User tidak ditemukan');
+      throw new AuthenticationError('User tidak ditemukan');
     }
 
     return result.rows[0];

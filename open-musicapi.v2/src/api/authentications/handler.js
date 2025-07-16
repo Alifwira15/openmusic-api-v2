@@ -47,13 +47,13 @@ class AuthenticationsHandler {
     const { id } = this._tokenManager.verifyRefreshToken(refreshToken);
 
     const accessToken = this._tokenManager.generateAccessToken({ id });
-    return {
+    return h.response({
       status: 'success',
       message: 'Access Token berhasil diperbarui',
       data: {
         accessToken,
       },
-    };
+    }).code(200);
   }
 
   async deleteAuthenticationHandler(request) {

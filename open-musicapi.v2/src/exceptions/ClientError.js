@@ -3,6 +3,10 @@ class ClientError extends Error {
     super(message);
     this.statusCode = statusCode;
     this.name = this.constructor.name;
+    this.isBoom = true;
+    this.output = {
+      statusCode: this.statusCode,
+    };
   }
 }
 

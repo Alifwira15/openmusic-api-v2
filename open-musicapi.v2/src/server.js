@@ -129,25 +129,50 @@ const init = async () => {
 
   
   server.ext('onPreResponse', (request, h) => {
-    const { response } = request;
+  const { response } = request;
 
-     if (response instanceof ClientError) {
+  if (response.isBoom) {
+    console.log('[DEBUG] isBoom error caught:', {
+      message: response.message,
+      statusCode: response.output.statusCode,
+      path: request.path,
+      method: request.method,
+    });
+  }
+
+  if (response instanceof ClientError) {
     return h.response({
       status: 'fail',
       message: response.message,
     }).code(response.statusCode);
   }
 
+ if (
+  response.isBoom &&
+  request.path === '/authentications' &&
+  request.method === 'put'
+) {
+  console.log('[CAUGHT JWT ERROR]', {
+    message: response.message,
+    originalStatus: response.output.statusCode,
+  }); 
+    return h.response({
+      status: 'fail',
+      message: 'Refresh token tidak valid',
+    }).code(400);
+  }
+
   if (response.isBoom && response.isServer) {
-    console.error('🔥 SERVER ERROR CAUGHT:', response);
+    console.error('SERVER ERROR CAUGHT:', response);
     return h.response({
       status: 'error',
       message: 'Terjadi kegagalan pada server kami',
     }).code(500);
   }
 
-    return h.continue;
-  });
+  return h.continue;
+});
+
 
   await server.start();
   console.log(`🚀 Server berjalan pada ${server.info.uri}`);

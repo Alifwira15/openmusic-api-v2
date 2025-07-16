@@ -47,6 +47,7 @@ class SongsHandler {
 
     return h.response({
       status: 'success',
+      message: 'Lagu berhasil diperbarui'
     }).code(200);
   }
 
