@@ -131,20 +131,15 @@ const init = async () => {
   server.ext('onPreResponse', (request, h) => {
     const { response } = request;
 
-    if (response instanceof ClientError) {
+     if (response instanceof ClientError) {
     return h.response({
       status: 'fail',
       message: response.message,
     }).code(response.statusCode);
   }
 
-  if (response instanceof Error) {
+  if (response.isBoom && response.isServer) {
     console.error('🔥 SERVER ERROR CAUGHT:', response);
-
-    if (!response.isServer) {
-      return h.continue;
-    }
-
     return h.response({
       status: 'error',
       message: 'Terjadi kegagalan pada server kami',

@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const InvariantError = require('../../exceptions/InvariantError');
 
 const AuthenticationPayloadSchema = Joi.object({
   username: Joi.string().required(),
@@ -17,14 +18,14 @@ const AuthenticationsValidator = {
   validatePostAuthenticationPayload: (payload) => {
     const validationResult = AuthenticationPayloadSchema.validate(payload);
     if (validationResult.error) {
-      throw new Error(validationResult.error.message);
+      throw new InvariantError(validationResult.error.message);
     }
   },
 
   validatePutAuthenticationPayload: (payload) => {
     const validationResult = PutAuthenticationPayloadSchema.validate(payload);
     if (validationResult.error) {
-      throw new Error(validationResult.error.message);
+      throw new InvariantError(validationResult.error.message);
     }
   },
 
